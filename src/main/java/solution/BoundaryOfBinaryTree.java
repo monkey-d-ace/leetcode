@@ -78,7 +78,7 @@ public class BoundaryOfBinaryTree {
     }
 
     public List<Integer> boundaryOfBinaryTree(TreeNode root) {
-        ArrayList<Integer> res = new ArrayList<Integer>();
+        ArrayList<Integer> res = new ArrayList<>();
         if (root == null) {
             return res;
         }
@@ -97,7 +97,7 @@ public class BoundaryOfBinaryTree {
             }
         }
         addLeaves(res, root);
-        Stack<Integer> s = new Stack<Integer>();
+        Stack<Integer> s = new Stack<>();
         t = root.right;
         while (t != null) {
             if (!isLeaf(t)) {
