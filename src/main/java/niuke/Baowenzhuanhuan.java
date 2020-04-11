@@ -1,42 +1,44 @@
 package niuke;
 
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 /**
- *
+ * 如果报文中出现0x0A，转义成2个字节0x12 0x34，如果出现0x0B的话，转义成0xAB 0xCD，其他维持不变
+ * 输入报文为16进制（加红是因为这边设了一个坑。。最后AC20%也是这个原因）输入的报文第一个字节是报文长度，报文长度这个字节也属于报文的一个部分，但是不参与转换的，输入的每个报文是用空格隔开的
+ * 要求：输出的报文的是大写的16进制，前面不用加前缀0x；也用空格隔开；
+ * 测试用例:
+ * 输入
+ * 8 1 2 3 4 5 6 A
+ * 输出
+ * 9 1 2 3 4 5 6 12 34
  */
 public class Baowenzhuanhuan {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         while (sc.hasNext()) {
-            int length = sc.nextInt();
-            StringBuilder sb = new StringBuilder();
-            int trans = 0;
-            for (int i = 0; i < length - 1; i++) {
-                String str = sc.next();
-                if (str.equals("A")) {
-                    sb.append(12);
-                    sb.append(" ");
-                    sb.append(34);
-                    trans++;
-                } else if (str.equals("B")) {
-                    sb.append("AB");
-                    sb.append(" ");
-                    sb.append("CD");
-                    trans++;
+            String[] array = sc.nextLine().split(" ");
+            int transNum = Integer.parseInt(array[0], 16);
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 1; i < array.length; i++) {
+                if (array[i].equals("A")) {
+                    stringBuilder.append("12");
+                    stringBuilder.append(" ");
+                    stringBuilder.append("34");
+                    stringBuilder.append(" ");
+                    transNum++;
+                } else if (array[i].equals("B")) {
+                    stringBuilder.append("AB");
+                    stringBuilder.append(" ");
+                    stringBuilder.append("CD");
+                    stringBuilder.append(" ");
+                    transNum++;
                 } else {
-                    sb.append(Integer.toHexString(Integer.parseInt(str)));
-                    sb.append(" ");
+                    stringBuilder.append(array[i]);
+                    stringBuilder.append(" ");
                 }
             }
-            sb.insert(0, Integer.toHexString(length + trans));
-            System.out.println(sb.toString());
+            stringBuilder.insert(0, Integer.toHexString(transNum).toUpperCase() + " ");
+            System.out.println(stringBuilder.toString().trim());
         }
         sc.close();
     }
