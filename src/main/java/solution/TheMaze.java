@@ -71,7 +71,7 @@ public class TheMaze {
             r++;
         if (dfs(maze, new int[] {start[0], r - 1}, destination, visited))
             return true;
-        while (l >= 0 && maze[start[0]][1] == 0)    // left
+        while (l >= 0 && maze[start[0]][l] == 0)    // left
             l--;
         if (dfs(maze, new int[] {start[0], l + 1}, destination, visited))
             return true;
