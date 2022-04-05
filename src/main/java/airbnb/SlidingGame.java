@@ -14,8 +14,11 @@ public class SlidingGame {
     private int originY;
     private String recovered;
 
+    int ans = 32;
+    List<String> res = new ArrayList<>();
+    List<String> out = new ArrayList<>();
     public static void main(String[] args) {
-        int[][] matrix = {
+        int[][] matrix = new int[][] {
                 {3, 1, 4},
                 {6, 2, 0},
                 {7, 5, 8}
@@ -24,7 +27,60 @@ public class SlidingGame {
         System.out.println(game.canSolve());
         List<String> res = game.getSolution();
         System.out.println(res);
+        System.out.println(Arrays.deepToString(matrix));
+        game.res.add(Arrays.deepToString(matrix));
+        int[][] standard = new int[][] {
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 0}
+        };
+        game.backtrack(matrix, game.originX, game.originY, 0, standard, -1, -1);
+        System.out.println(game.ans == 32 ? -1 : game.ans);
+        System.out.println(game.out);
     }
+
+    private boolean isEqual(int[][] board, int[][] standard) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] != standard[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private void backtrack(int[][] board, int x, int y, int time, int[][] standard, int preX, int preY) {
+        if (time > ans) {
+            return;
+        }
+        if (isEqual(board, standard)) {
+            ans = time;
+            out = new ArrayList<>(res);
+            return;
+        }
+
+        int[] dirs = new int[] {-1, 0, 1, 0, -1};
+        for (int i = 0; i < 4; i++) {
+            int newX = x + dirs[i];
+            int newY = y + dirs[i + 1];
+            if (newX == preX && newY == preY) {
+                continue;
+            }
+            if (newX >= 0 && newX < board.length && newY >= 0 && newY < board[0].length) {
+                int temp = board[x][y];
+                board[x][y] = board[newX][newY];
+                board[newX][newY] = temp;
+                res.add(Arrays.deepToString(board));
+                backtrack(board, newX, newY, time + 1, standard, x, y);
+                res.remove(res.size() - 1);
+                board[newX][newY] = board[x][y];
+                board[x][y] = temp;
+            }
+        }
+
+    }
+
     public SlidingGame(int[][] matrix) {
         this.matrix = matrix;
         this.m = matrix.length;
